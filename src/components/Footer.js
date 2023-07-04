@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import '../Styles/Footer.css';
 import g_plus from '../Images/social_icons/g_plus.png';
 import facebook from '../Images/social_icons/facebook.png';
 import youtube from '../Images/social_icons/you_tube.png';
