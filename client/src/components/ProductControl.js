@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
+//component imports
 import ProductList from './ProductList';
 import AddProduct from './AddProduct';
 import NewProductForm from './NewProductForm';
 import ProductDetail from './ProductDetail';
 
-import tshirt from '../Images/products/tshirt.png';
+/*import tshirt from '../Images/products/tshirt.png';
 import backpack from '../Images/products/backpack.png';
 import pants from '../Images/products/pants.png';
 import trekkingshoes from '../Images/products/trekkingshoes.png';
 import giacket from '../Images/products/giacket.png';
-import tshirt_ladies from '../Images/products/tshirt_ladies.png';
+import tshirt_ladies from '../Images/products/tshirt_ladies.png';*/
 import Default_image from '../Images/product_image.jpeg';
 
+//commented out old section of code(hard coded product list) since now there is a connection to the backend
 // ActualProductList
-const actualProductList = [
+/*const actualProductList = [
   
  
     {
@@ -52,17 +56,18 @@ const actualProductList = [
         photo: tshirt_ladies,
         id: '6'
     }
- ]
+ ]*/
 
 class ProductControl extends Component {
    constructor(props){
        super(props);
        this.state ={
         productFormVisible: false,
-        actualProductList: actualProductList, //new code
+        actualProductList: [], //actualProductList, array is new code after connecting to backend
         selectedProduct: null
        }
    }
+   //old  code before connection to backend
     handleClick = () => {
         if(this.state.selectedProduct !=null){
             this.setState({
@@ -100,7 +105,7 @@ class ProductControl extends Component {
        let buttonText = null
     
        if (this.state.selectedProduct != null) {
-           currentVisibleState = <ProductDetail product ={this.state.selectedProduct} />
+           currentVisibleState = <ProductDetail product ={this.state.selectedProduct} onDeleteProduct = {this.handleDeletingProduct} />
            buttonText = 'Go back to Product List'
        } else if (this.state.productFormVisible) {
            currentVisibleState = <NewProductForm onNewProductCreation={this.handleAddingNewProduct} />
@@ -119,8 +124,27 @@ class ProductControl extends Component {
 
              {currentVisibleState}
            </React.Fragment>
-       )
+     )
    }
+
+    
+    handleDeletingProduct = (id) => {
+        axios.delete('http://localhost:5000/                   products/' + id)
+            .then(res => console.log(res.data))
+            .catch((error) => {
+                console.log(error)
+            })
+        this.setState({
+            actualProductList: this.state.actualProductList.filter(product => product._id !== id),
+            formVisibleOnPage: false,
+            selectedProduct: null
+        })
+    }
+
+    
+
 }
+
+
 
 export default ProductControl

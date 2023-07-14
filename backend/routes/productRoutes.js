@@ -16,13 +16,28 @@ router.get('/', (req,res)=>{
 
    // Fetch all products from database
 
-   Product.find({}, (error, products)=>{
+   //commented old code, mongoose no longer supporting call aback fuctions
+
+  /* Product.find({}, (error, products)=>{
 
        if (error) console.log(error)
 
        res.json(products)
 
-   })
+   })*/
+
+   // Using promises
+    Product.find({})
+        .exec()
+        .then(products => {
+            console.log('Products found:', products);
+            // Process the users array
+        })
+        .catch(error => {
+            console.error('Error finding users:', error);
+            // Handle the error appropriately
+        });
+
 
 })
 

@@ -1,8 +1,12 @@
 import React from 'react'
 import '../Styles/productDetail.css'
+import Default_image from '../Images/product_image.jpeg'
 
 function ProductDetail(props) {
-   return (
+   
+    
+       
+    return (
        <React.Fragment>
 
            <div className="container">
@@ -43,8 +47,8 @@ function ProductDetail(props) {
                               
                                <div className="action">
                                    <button className="add-to-cart btn btn-default"  type="button">Buy Product</button>
-                                   {/* <button className="like btn btn-default" type="button"><span className="fa fa-heart"></span></button> */}
-                                   <button className="add-to-cart btn btn-default float-right"> Delete Product</button>
+                                   {/* <button className="like btn btn-default" type="button"><span className="fa fa-heart"></span></button> */} 
+                                   <button className="add-to-cart btn btn-default float-right" onClick={()=> props.onDeleteProduct(props.product._id)}> Delete Product</button> {/* new code*/}
                                </div>
                            </div>
                        </div>
@@ -52,7 +56,7 @@ function ProductDetail(props) {
                </div>
            </div>
        </React.Fragment>
-   )
-}
+   ) 
+} 
 
 export default ProductDetail
