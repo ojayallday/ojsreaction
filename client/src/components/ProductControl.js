@@ -6,6 +6,8 @@ import ProductList from './ProductList';
 import AddProduct from './AddProduct';
 import NewProductForm from './NewProductForm';
 import ProductDetail from './ProductDetail';
+import EditProductForm from './EditProductForm';
+
 
 /*import tshirt from '../Images/products/tshirt.png';
 import backpack from '../Images/products/backpack.png';
@@ -64,12 +66,17 @@ class ProductControl extends Component {
        this.state ={
         productFormVisible: false,
         actualProductList: [], //actualProductList, array is new code after connecting to backend
-        selectedProduct: null
+        selectedProduct: null,
+        editProduct: false, //new code
        }
    }
    //old  code before connection to backend
     handleClick = () => {
-        if(this.state.selectedProduct !=null){
+        if(this.state.editProduct){
+            this.setState({
+                editProduct: false
+            })
+        }else if(this.state.selectedProduct !=null){
             this.setState({
                 productFormVisible: false,
                 selectedProduct: null
@@ -100,20 +107,41 @@ class ProductControl extends Component {
         this.setState({selectedProduct: selectedProduct});
     }
 
+    handleEditingProduct = (editedProduct) =>{
+
+        axios.put('http://localhost:5000/api/products/' + this.state.selectedProduct._id, editedProduct)
+            .then(res =>console.log(res.data))
+       
+        this.setState({
+            editProduct: false,
+            // formVisibleOnPage: false
+        })
+        window.location = '/';
+    }
+
+    //method to show edit form and set state
+    handleEditProductClick = () =>{
+        this.setState({
+            editProduct: true
+        })
+    }
+
    render() {
        let currentVisibleState = null;
        let buttonText = null
     
-       if (this.state.selectedProduct != null) {
-           currentVisibleState = <ProductDetail product ={this.state.selectedProduct} onDeleteProduct = {this.handleDeletingProduct} />
-           buttonText = 'Go back to Product List'
+       if (this.state.editProduct) {
+           currentVisibleState = <EditProductForm product={this.state.selectedProduct} onEditProduct={this.handleEditingProduct} />
+           buttonText = "Back to Product Detail "
+       } else if (this.state.selectedProduct != null) {
+           currentVisibleState = <ProductDetail product={this.state.selectedProduct} onDeleteProduct={this.handleDeletingProduct} onEditProductClick={this.handleEditProductClick} /> //new code
+           buttonText = 'Back to Product List '
        } else if (this.state.productFormVisible) {
            currentVisibleState = <NewProductForm onNewProductCreation={this.handleAddingNewProduct} />
            buttonText = 'Go back to Product List'
        } else {
            currentVisibleState = <ProductList productList={this.state.actualProductList} onProductSelection={this.handleChangingSelectedProduct} /> // Because a user will actually be clicking on the Product in the Product component, we will need to pass our new handleChangingSelectedProduct method as a prop.
            buttonText = 'Add A Product'
-
        }
        return (
            <React.Fragment>
